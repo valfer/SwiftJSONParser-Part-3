@@ -93,13 +93,13 @@ class Parser {
         return error
     }
 
-    private func StringFromJSON(ao : AnyObject?) -> String? {
+    private func StringFromJSON(ao : AnyObject) -> String? {
         return ao as? String
     }
-    private func DoubleFromJSON(ao : AnyObject?) -> Double? {
+    private func DoubleFromJSON(ao : AnyObject) -> Double? {
         return ao as? Double
     }
-    private func DictionaryFromJSON(ao : AnyObject?) -> [String: AnyObject]? {
+    private func DictionaryFromJSON(ao : AnyObject) -> [String: AnyObject]? {
         return ao as? [String: AnyObject]
     }
 
