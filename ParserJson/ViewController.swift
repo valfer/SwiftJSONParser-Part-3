@@ -14,8 +14,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         let parser = Parser()
-        //let parserTestReader = readJsonFile("test")
-        let parserTestReader = getJsonFromWeb("http://www.tabasoft.it/ios/json/photos.json")
+        let parserTestReader = readJsonFile("test")
+        // uncomment this (and comment above) to get the json data from the web
+        // let parserTestReader = getJsonFromWeb("http://www.tabasoft.it/ios/json/photos.json")
         parser.start(parserTestReader) { (parserResult : Parser.Result) -> Bool in
             
             switch parserResult {
