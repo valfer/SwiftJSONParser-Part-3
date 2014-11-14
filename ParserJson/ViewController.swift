@@ -12,14 +12,19 @@ class ViewController: UIViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let parserTestReader = readJsonFile("test")
+        
         let parser = Parser()
-        parser.start(parserTestReader) { (parserResult : ParserResult) -> Bool in
+        //let parserTestReader = readJsonFile("test")
+        let parserTestReader = getJsonFromWeb("http://www.tabasoft.it/ios/json/photos.json")
+        parser.start(parserTestReader) { (parserResult : Parser.Result) -> Bool in
             
             switch parserResult {
             case let .Error(error):
-                println("Errore: " + error.localizedDescription)
+                if error.domain == "ParserElement" {
+                    println("Error on a photo: " + error.localizedDescription)
+                } else {
+                    println("Error: " + error.localizedDescription)
+                }
                 
             case let .Value(photo):
                 println(photo.data + ": " + photo.titolo)
@@ -30,7 +35,7 @@ class ViewController: UIViewController {
         }
     }
 
-    func readJsonFile(jsonFileName : String)(completion : ReaderResult->()) {
+    private func readJsonFile(jsonFileName : String)(completion : Parser.ReaderResult->()) {
         
         var fileData : NSData?
         var error : NSError?
@@ -45,13 +50,38 @@ class ViewController: UIViewController {
             error = NSError(domain: "ParserReader", code: 100, userInfo: [NSLocalizedDescriptionKey:"The file was not found"]);
         }
         
-        var result : ReaderResult
+        var result : Parser.ReaderResult
         if (error != nil) {
-            result = ReaderResult.Error(error!)
+            result = Parser.ReaderResult.Error(error!)
         } else {
-            result = ReaderResult.Value(fileData!)
+            result = Parser.ReaderResult.Value(fileData!)
         }
         completion(result)
+    }
+    
+    private func getJsonFromWeb(jsonUrl : String)(completion : Parser.ReaderResult->()) {
+        
+        var fileData : NSData?
+        var error : NSError?
+        let url = NSURL(string: jsonUrl);
+        if let _url = url {
+            var request = NSURLRequest(URL: NSURL(string: jsonUrl)!)
+            let task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, urlResponse, error in
+                
+                var result : Parser.ReaderResult
+                if (error != nil) {
+                    result = Parser.ReaderResult.Error(error!)
+                } else {
+                    result = Parser.ReaderResult.Value(data!)
+                }
+                completion(result)
+            }
+            task.resume()
+        
+        } else {
+            error = NSError(domain: "ParserReader", code: 101, userInfo: [NSLocalizedDescriptionKey:"Wrong URL"]);
+            completion(Parser.ReaderResult.Error(error!))
+        }
     }
 }
 

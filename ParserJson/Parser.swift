@@ -8,74 +8,22 @@
 
 import Foundation
 
-enum ReaderResult {
-    case Value(NSData)
-    case Error(NSError)
-}
-
-enum ParserResult {
-    case Value(Photo)
-    case Error(NSError)
-}
-
 class Parser {
+
+    //MARK: PUBLIC (internal)
+    enum ReaderResult {
+        case Value(NSData)
+        case Error(NSError)
+    }
+    
+    enum Result {
+        case Value(Photo)
+        case Error(NSError)
+    }
 
     // the reader is a func that receive a completion as parameter (called on finish)
     typealias ParserReader = (ReaderResult->())->()
-    typealias ParserCallback = (ParserResult)->Bool
-    
-    func StringFromJSON(ao : AnyObject?) -> String? {
-        return ao as? String
-    }
-    func DoubleFromJSON(ao : AnyObject?) -> Double? {
-        return ao as? Double
-    }
-    
-    func handleData(data : NSData, parserCallback : ParserCallback) -> NSError? {
-
-        var error : NSError?
-        let json : AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: &error)
-
-        if let _json = json as? [AnyObject] {
-            
-            for jsonItem in _json {
-                
-                if let _jsonItem = jsonItem as? [String: AnyObject] {
-         
-                    var ok = false
-                    var toStop = false
-                    if let _titolo = StringFromJSON(_jsonItem["titolo"]) {
-                        if let _autore = StringFromJSON(_jsonItem["autore"]) {
-                            if let _latitudine = DoubleFromJSON(_jsonItem["latitudine"]) {
-                                if let _longitudine = DoubleFromJSON(_jsonItem["longitudine"]) {
-                                    if let _data = StringFromJSON(_jsonItem["data"]) {
-                                        if let _descr = StringFromJSON(_jsonItem["descr"]) {
-                                            
-                                            let photo = Photo(titolo: _titolo, autore: _autore, latitudine: _latitudine, longitudine: _longitudine, data: _data, descr: _descr)
-                                            toStop = parserCallback(ParserResult.Value(photo))
-                                            if toStop {
-                                                break
-                                            }
-                                            ok = true
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (!ok) {
-                        // don't override error
-                        let photoError = NSError(domain: "Parser", code: 101, userInfo: [NSLocalizedDescriptionKey:"Errore su un elemento dell'array"])
-                        parserCallback(ParserResult.Error(photoError))
-                    }
-                }
-            }
-        } else {
-            error = NSError(domain: "Parser", code: 100, userInfo: [NSLocalizedDescriptionKey:"Json is not an array of objects"])
-        }
-        
-        return error
-    }
+    typealias ParserCallback = (Result)->Bool
     
     func start(reader : ParserReader, parserCallback : ParserCallback) {
         
@@ -93,8 +41,66 @@ class Parser {
             }
             
             if let _error = error {
-                parserCallback(ParserResult.Error(_error))
+                parserCallback(Parser.Result.Error(_error))
             }
         }
     }
+    
+    //MARK: PRIVATE
+   
+    private func handleData(data : NSData, parserCallback : ParserCallback) -> NSError? {
+        
+        var error : NSError?
+        let json : AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: &error)
+        
+        if let _json = json as? [AnyObject] {
+            
+            for jsonItem in _json {
+                
+                if let _jsonItem = jsonItem >>> DictionaryFromJSON {
+                    var ok = false
+                    var toStop = false
+                    if let _titolo = _jsonItem["titolo"] >>> StringFromJSON {
+                        if let _autore = _jsonItem["autore"] >>> StringFromJSON {
+                            if let _latitudine = _jsonItem["latitudine"] >>> DoubleFromJSON {
+                                if let _longitudine = _jsonItem["longitudine"] >>> DoubleFromJSON {
+                                    if let _data = _jsonItem["data"] >>> StringFromJSON {
+                                        if let _descr = _jsonItem["descr"] >>> StringFromJSON {
+                                            
+                                            let photo = Photo(titolo: _titolo, autore: _autore, latitudine: _latitudine, longitudine: _longitudine, data: _data, descr: _descr)
+                                            toStop = parserCallback(Result.Value(photo))
+                                            if toStop {
+                                                break
+                                            }
+                                            ok = true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (!ok) {
+                        // don't override error
+                        let photoError = NSError(domain: "ParserElement", code: 101, userInfo: [NSLocalizedDescriptionKey:"Errore su un elemento dell'array"])
+                        parserCallback(Result.Error(photoError))
+                    }
+                }
+            }
+        } else {
+            error = NSError(domain: "Parser", code: 100, userInfo: [NSLocalizedDescriptionKey:"Json is not an array of objects"])
+        }
+        
+        return error
+    }
+
+    private func StringFromJSON(ao : AnyObject?) -> String? {
+        return ao as? String
+    }
+    private func DoubleFromJSON(ao : AnyObject?) -> Double? {
+        return ao as? Double
+    }
+    private func DictionaryFromJSON(ao : AnyObject?) -> [String: AnyObject]? {
+        return ao as? [String: AnyObject]
+    }
+
 }

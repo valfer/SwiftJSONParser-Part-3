@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D99557DE1A160D3D00C05F10 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99557DD1A160D3D00C05F10 /* Operators.swift */; };
 		D99A407D1A126ED200BCBC45 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99A407C1A126ED200BCBC45 /* Parser.swift */; };
 		D9A3BED51A13C54900DDF476 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = D9A3BED41A13C54900DDF476 /* README.md */; };
 		D9E12F531A0A125100A80241 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E12F521A0A125100A80241 /* AppDelegate.swift */; };
@@ -30,6 +31,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D99557DD1A160D3D00C05F10 /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 		D99A407C1A126ED200BCBC45 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		D9A3BED41A13C54900DDF476 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		D9E12F4D1A0A125000A80241 /* ParserJson.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ParserJson.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,6 +90,7 @@
 				D9E12F521A0A125100A80241 /* AppDelegate.swift */,
 				D9E12F541A0A125100A80241 /* ViewController.swift */,
 				D99A407C1A126ED200BCBC45 /* Parser.swift */,
+				D99557DD1A160D3D00C05F10 /* Operators.swift */,
 				D9E12F741A0A16D800A80241 /* Photo.swift */,
 				D9E12F561A0A125100A80241 /* Main.storyboard */,
 				D9A3BED41A13C54900DDF476 /* README.md */,
@@ -230,6 +233,7 @@
 				D9A3BED51A13C54900DDF476 /* README.md in Sources */,
 				D9E12F551A0A125100A80241 /* ViewController.swift in Sources */,
 				D9E12F531A0A125100A80241 /* AppDelegate.swift in Sources */,
+				D99557DE1A160D3D00C05F10 /* Operators.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
