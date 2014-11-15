@@ -47,7 +47,7 @@ class Parser {
             }
             
             if let _error = error {
-                let parseError = NSError(domain: "Parser", code: ParserError.ReadingData.rawValue, userInfo: [NSLocalizedDescriptionKey: "Error reading data", NSUnderlyingErrorKey:_error])
+                let parseError = NSError(domain: "Parser", code: ParserError.ReadingData.rawValue, userInfo: [NSLocalizedDescriptionKey: "Error reading data", NSUnderlyingErrorKey: _error])
                 parserCallback(Parser.Result.Error(_error))
             }
         }
