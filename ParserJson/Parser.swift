@@ -8,11 +8,15 @@
 
 import Foundation
 
-let kParserMaxBlockingError = 100     // should be class var, but not yet implemented
-
 class Parser {
 
     //MARK: PUBLIC (internal)
+    enum ParserError : Int {
+        case ReadingData = 100
+        case ConvertingMainJsonObj
+        case ConvertingAnElement
+    }
+    
     enum ReaderResult {
         case Value(NSData)
         case Error(NSError)
@@ -43,6 +47,7 @@ class Parser {
             }
             
             if let _error = error {
+                let parseError = NSError(domain: "Parser", code: ParserError.ReadingData.rawValue, userInfo: [NSLocalizedDescriptionKey: "Error reading data", NSUnderlyingErrorKey:_error])
                 parserCallback(Parser.Result.Error(_error))
             }
         }
@@ -83,13 +88,13 @@ class Parser {
                     }
                     if (!ok) {
                         // don't override error
-                        let photoError = NSError(domain: "Parser", code: kParserMaxBlockingError+1, userInfo: [NSLocalizedDescriptionKey:"Errore su un elemento dell'array"])
+                        let photoError = NSError(domain: "Parser", code: ParserError.ConvertingAnElement.rawValue, userInfo: [NSLocalizedDescriptionKey:"Errore su un elemento dell'array"])
                         parserCallback(Result.Error(photoError))
                     }
                 }
             }
         } else {
-            error = NSError(domain: "Parser", code: kParserMaxBlockingError, userInfo: [NSLocalizedDescriptionKey:"Json is not an array of AnyObjects"])
+            error = NSError(domain: "Parser", code: ParserError.ConvertingMainJsonObj.rawValue, userInfo: [NSLocalizedDescriptionKey:"Json is not an array of AnyObjects"])
         }
         
         return error
