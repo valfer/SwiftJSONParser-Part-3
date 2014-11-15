@@ -8,6 +8,8 @@
 
 import Foundation
 
+let kMaxBlockingError = 100     // should be class var, but not yet implemented
+
 class Parser {
 
     //MARK: PUBLIC (internal)
@@ -81,13 +83,13 @@ class Parser {
                     }
                     if (!ok) {
                         // don't override error
-                        let photoError = NSError(domain: "ParserElement", code: 101, userInfo: [NSLocalizedDescriptionKey:"Errore su un elemento dell'array"])
+                        let photoError = NSError(domain: "ParserElement", code: kMaxBlockingError+1, userInfo: [NSLocalizedDescriptionKey:"Errore su un elemento dell'array"])
                         parserCallback(Result.Error(photoError))
                     }
                 }
             }
         } else {
-            error = NSError(domain: "Parser", code: 100, userInfo: [NSLocalizedDescriptionKey:"Json is not an array of objects"])
+            error = NSError(domain: "Parser", code: kMaxBlockingError, userInfo: [NSLocalizedDescriptionKey:"Json is not an array of AnyObjects"])
         }
         
         return error

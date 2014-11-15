@@ -21,12 +21,17 @@ class ViewController: UIViewController {
             
             switch parserResult {
             case let .Error(error):
-                if error.domain == "ParserElement" {
-                    println("Error on a photo: " + error.localizedDescription)
-                } else {
-                    println("Error: " + error.localizedDescription)
-                }
                 
+                if error.domain == "Parser" {
+                    if error.code > kMaxBlockingError { // error on one element
+                        println("Parser Error on a photo: " + error.localizedDescription)
+                    } else {
+                        println("Parser Error: " + error.localizedDescription)
+                    }
+                } else {
+                    println("Generale Error: " + error.localizedDescription)
+                }
+        
             case let .Value(photo):
                 println(photo.data + ": " + photo.titolo)
                 
