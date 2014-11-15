@@ -23,7 +23,7 @@ class ViewController: UIViewController {
             case let .Error(error):
                 
                 if error.domain == "Parser" {
-                    if error.code > kMaxBlockingError { // error on one element
+                    if error.code > kParserMaxBlockingError { // error on one element
                         println("Parser Error on a photo: " + error.localizedDescription)
                     } else {
                         println("Parser Error: " + error.localizedDescription)
