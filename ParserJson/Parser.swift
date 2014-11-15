@@ -83,7 +83,7 @@ class Parser {
                     }
                     if (!ok) {
                         // don't override error
-                        let photoError = NSError(domain: "ParserElement", code: kMaxBlockingError+1, userInfo: [NSLocalizedDescriptionKey:"Errore su un elemento dell'array"])
+                        let photoError = NSError(domain: "Parser", code: kMaxBlockingError+1, userInfo: [NSLocalizedDescriptionKey:"Errore su un elemento dell'array"])
                         parserCallback(Result.Error(photoError))
                     }
                 }
