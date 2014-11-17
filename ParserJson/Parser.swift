@@ -89,7 +89,10 @@ class Parser {
                     if (!ok) {
                         // don't override error
                         let photoError = NSError(domain: "Parser", code: ParserError.ConvertingAnElement.rawValue, userInfo: [NSLocalizedDescriptionKey:"Errore su un elemento dell'array"])
-                        parserCallback(Result.Error(photoError))
+                        toStop = parserCallback(Result.Error(photoError))
+                        if toStop {
+                            break
+                        }
                     }
                 }
             }
